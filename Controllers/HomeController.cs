@@ -40,21 +40,21 @@ namespace Mission4.Controllers
         [HttpPost]
         public IActionResult Form(FormSubmission response)
         {
-            _movieContext.Add(response); //this proposes changes, does not save them
-            _movieContext.SaveChanges(); // must include this to save
+            if (ModelState.IsValid)
+            {
+                _movieContext.Add(response); //this proposes changes, does not save them
+                _movieContext.SaveChanges(); // must include this to save
 
-            return View("Submission", response);
+                return View("Submission", response);
+            }
+            else
+            {
+                return View(response);
+            }
+            
+
+            
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

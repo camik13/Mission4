@@ -9,16 +9,16 @@
 
 <form method="post">
 
-    <label asp-for="Category">Category: </label>
-    <select asp-for="Category">
-        <option>Action/Adventure</option>
-        <option>Comedy</option>
-        <option>Drama</option>
-        <option>Family</option>
-        <option>Horror/Suspense</option>
-        <option>Miscellaneous</option>
-        <option>Television</option>
-        <option>VHS</option>
+    <div asp-validation-summary="All"></div>
+
+    <label asp-for="CategoryID">Category: </label>
+    <select asp-for="CategoryID">
+        <option value="">Select a Category</option>
+        @foreach (Category category in ViewBag.Categories)
+        {
+            <option value="@category.CategoryID">@category.CategoryName</option>
+        }
+
     </select><br />
 
     <label asp-for="Title">Title: </label>
@@ -50,8 +50,6 @@
 
     <label asp-for="Notes">Notes:</label>
     <input asp-for="Notes" /><br />
-
-    <div asp-validation-summary="All"></div>
 
     <input type="submit" value="Submit" />
 

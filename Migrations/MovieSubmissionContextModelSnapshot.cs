@@ -15,15 +15,70 @@ namespace Mission4.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.22");
 
-            modelBuilder.Entity("Mission4.Models.FormSubmission", b =>
+            modelBuilder.Entity("Mission4.Models.Category", b =>
                 {
-                    b.Property<int>("ApplicationID")
+                    b.Property<int>("CategoryID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
+                    b.Property<string>("CategoryName")
                         .HasColumnType("TEXT");
+
+                    b.HasKey("CategoryID");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryID = 1,
+                            CategoryName = "Action/Adventure"
+                        },
+                        new
+                        {
+                            CategoryID = 2,
+                            CategoryName = "Comedy"
+                        },
+                        new
+                        {
+                            CategoryID = 3,
+                            CategoryName = "Drama"
+                        },
+                        new
+                        {
+                            CategoryID = 4,
+                            CategoryName = "Family"
+                        },
+                        new
+                        {
+                            CategoryID = 5,
+                            CategoryName = "Horror/Suspense"
+                        },
+                        new
+                        {
+                            CategoryID = 6,
+                            CategoryName = "Miscellaneous"
+                        },
+                        new
+                        {
+                            CategoryID = 7,
+                            CategoryName = "Television"
+                        },
+                        new
+                        {
+                            CategoryID = 8,
+                            CategoryName = "VHS"
+                        });
+                });
+
+            modelBuilder.Entity("Mission4.Models.FormSubmission", b =>
+                {
+                    b.Property<int>("MovieID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Director")
                         .IsRequired()
@@ -50,15 +105,17 @@ namespace Mission4.Migrations
                     b.Property<int>("Year")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ApplicationID");
+                    b.HasKey("MovieID");
+
+                    b.HasIndex("CategoryID");
 
                     b.ToTable("Responses");
 
                     b.HasData(
                         new
                         {
-                            ApplicationID = 1,
-                            Category = "Family",
+                            MovieID = 1,
+                            CategoryID = 4,
                             Director = "Ron Clements and John Musker",
                             Edited = false,
                             LentTo = "",
@@ -69,8 +126,8 @@ namespace Mission4.Migrations
                         },
                         new
                         {
-                            ApplicationID = 2,
-                            Category = "Family",
+                            MovieID = 2,
+                            CategoryID = 4,
                             Director = "Kenneth Branagh",
                             Edited = false,
                             LentTo = "",
@@ -81,8 +138,8 @@ namespace Mission4.Migrations
                         },
                         new
                         {
-                            ApplicationID = 3,
-                            Category = "Action/Adventure",
+                            MovieID = 3,
+                            CategoryID = 1,
                             Director = "Jon Watts",
                             Edited = false,
                             LentTo = "",
@@ -91,6 +148,15 @@ namespace Mission4.Migrations
                             Title = "Spider-Man: No Way Home",
                             Year = 2021
                         });
+                });
+
+            modelBuilder.Entity("Mission4.Models.FormSubmission", b =>
+                {
+                    b.HasOne("Mission4.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

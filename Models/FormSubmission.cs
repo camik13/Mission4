@@ -10,9 +10,9 @@ namespace Mission4.Models
     {
         [Key]
         [Required]
-        public int ApplicationID { get; set; }
+        public int MovieID { get; set; }
         [Required]
-        public string Category { get; set; }
+        public int CategoryID { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
@@ -25,5 +25,7 @@ namespace Mission4.Models
         public string LentTo { get; set; }
         [StringLength(25, ErrorMessage ="Please, no longer than 25 characters.")]
         public string Notes { get; set; }
+        
+        public Category Category { get; set; }
     }
 }

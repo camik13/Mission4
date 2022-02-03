@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mission4.Models;
 using System;
@@ -11,14 +12,13 @@ namespace Mission4.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        //private readonly ILogger<HomeController> _logger;
 
         private MovieSubmissionContext _movieContext { get; set; }
 
-        public HomeController(ILogger<HomeController> logger, MovieSubmissionContext name)
+        public HomeController(MovieSubmissionContext name)
         {
-            _logger = logger;
-            _movieContext = name;
+           _movieContext = name;
         }
 
         public IActionResult Index()
@@ -34,6 +34,8 @@ namespace Mission4.Controllers
         [HttpGet]
         public IActionResult Form()
         {
+            ViewBag.Categories = _movieContext.Categories.ToList();
+
             return View();
         }
 
@@ -52,8 +54,48 @@ namespace Mission4.Controllers
                 return View(response);
             }
             
+        }
+        public IActionResult MovieList()
+        {
+            var submissions = _movieContext.Responses
+                .Include(x => x.Category)
+                .ToList();
 
-            
+            return View(submissions);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int movieid)
+        {
+            ViewBag.Categories = _movieContext.Categories.ToList();
+            var response = _movieContext.Responses.Single(x => x.MovieID == movieid);
+
+            return View("Form", response);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(FormSubmission response)
+        {
+            _movieContext.Update(response);
+            _movieContext.SaveChanges();
+
+            return RedirectToAction("MovieList");
+        }
+
+        [HttpGet]
+        public IActionResult Delete (int movieid)
+        {
+            var movie = _movieContext.Responses.Single(x => x.MovieID == movieid);
+            return View(movie);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(FormSubmission response)
+        {
+            _movieContext.Responses.Remove(response);
+            _movieContext.SaveChanges();
+
+            return RedirectToAction("MovieList");
         }
 
     }
